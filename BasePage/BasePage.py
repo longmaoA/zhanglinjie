@@ -109,7 +109,6 @@ class BasePage:
 
         # 处理完成之后再把隐式时间改回到10s
         self.driver.implicitly_wait(10)
-        print("nihao")
 
 # class AllureMethods:
 #     def __init__(self):
