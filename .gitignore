@@ -7,10 +7,4 @@
 *.iml
 out
 gen
-BasePage/
-Login/
-MainPage/
-RunCase.py
-TestReports/
-pytest.ini
-venv/
+.pytest_cache
