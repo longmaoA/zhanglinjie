@@ -1,14 +1,55 @@
 import time
+import os
+import platform
 from appium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.remote.webdriver import WebDriver
 
 
+# 获取当前系统
+_system_name = platform.system()
+
+
+def stop_appium_sever(post_num):
+    """关闭appium服务"""
+    if _system_name == 'Windows':
+        p = os.popen(f'netstat -aon | findstr {post_num}')
+        p0 = p.read().strip()
+        if p0 != '' and 'LISTENING' in p0:
+            p1 = int(p0.split('LISTENING')[1].strip()[0:4])  # 获取进程号
+            os.popen(f'taskkill /F /PID {p1}')  # 结束进程
+            print('appium server已结束')
+    elif _system_name == 'MAC':
+        p = os.popen(f'lsof -i tcp:{post_num}')
+        p0 = p.read()
+        if p0.strip() != '':
+            p1 = int(p0.split('\n')[1].split()[1])  # 获取进程号
+            os.popen(f'kill {p1}')  # 结束进程
+            print('appium server已结束')
+
+
+def start_appium_sever(post_num):
+    """开启appium服务"""
+    stop_appium_sever(post_num)  # 先判断端口是否被占用，如果被占用则关闭该端口号
+    # 根据系统，启动对应的服务
+    cmd_dict = {
+        'Windows': f' start /b appium -a 127.0.0.1 -p {post_num} --session-override --no-reset --local-timezone',
+        'MAC': f'appium -a 127.0.0.1 -p {post_num} --session-override --no-reset --local-timezone &'
+    }
+    os.system(cmd_dict[_system_name])
+    time.sleep(3)  # 等待启动完成
+    print('\nappium sever 启动成功!\n')
+
+
 class AppiumDriver:
     driver: WebDriver = None
     @staticmethod
     def app_driver(port=4723):
+
+        # 启动APPIUM sever
+        start_appium_sever(port)
+
         caps = {
             'platformName': 'Android',
             'deviceName': '诺基亚',
