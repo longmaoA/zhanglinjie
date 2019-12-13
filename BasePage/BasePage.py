@@ -12,7 +12,9 @@ _system_name = platform.system()
 
 
 def stop_appium_sever(post_num):
-    """关闭appium服务"""
+    """
+    关闭appium服务
+    """
     if _system_name == 'Windows':
         p = os.popen(f'netstat -aon | findstr {post_num}')
         p0 = p.read().strip()
@@ -20,22 +22,25 @@ def stop_appium_sever(post_num):
             p1 = int(p0.split('LISTENING')[1].strip()[0:4])  # 获取进程号
             os.popen(f'taskkill /F /PID {p1}')  # 结束进程
             print('appium server已结束')
-    elif _system_name == 'MAC':
+    elif _system_name == 'Darwin':
         p = os.popen(f'lsof -i tcp:{post_num}')
         p0 = p.read()
         if p0.strip() != '':
             p1 = int(p0.split('\n')[1].split()[1])  # 获取进程号
             os.popen(f'kill {p1}')  # 结束进程
-            print('appium server已结束')
+            print('appium server已结束!')
 
 
 def start_appium_sever(post_num):
-    """开启appium服务"""
-    stop_appium_sever(post_num)  # 先判断端口是否被占用，如果被占用则关闭该端口号
+    """
+    开启appium服务
+    """
+    # 先判断端口是否被占用，如果被占用则关闭该端口号
+    stop_appium_sever(post_num)
     # 根据系统，启动对应的服务
     cmd_dict = {
         'Windows': f' start /b appium -a 127.0.0.1 -p {post_num} --session-override --no-reset --local-timezone',
-        'MAC': f'appium -a 127.0.0.1 -p {post_num} --session-override --no-reset --local-timezone &'
+        'Darwin': f'appium -a 127.0.0.1 -p {post_num} --session-override --no-reset --local-timezone &'
     }
     os.system(cmd_dict[_system_name])
     time.sleep(3)  # 等待启动完成
@@ -47,7 +52,7 @@ class AppiumDriver:
     @staticmethod
     def app_driver(port=4723):
 
-        # 启动APPIUM sever
+        # 启动 APPIUM Sever
         start_appium_sever(port)
 
         caps = {
@@ -57,6 +62,7 @@ class AppiumDriver:
             'appActivity': '.ui.activity.SplashActivity',
             'automationName': 'uiautomator2',
             'autoGrantPermissions': True,
+            'printPageSourceOnFindFailure': True,
             'newCommandTimeout': '66',
             'chromedriverExecutable': '/Users/PycharmProjects/System/Mobile/Mini/chromedriver_240',
             'neReset': True,
@@ -77,31 +83,31 @@ class AppiumDriver:
 
 
 class BasePage:
-    # 定义一个黑名单，便于找不到元素时，处理异常弹窗上的元素
-    _black_list = [(By.ID, "iv_close")]
 
     def __init__(self):
         self.driver = AppiumDriver.app_driver()
 
     """
-    查看元素是否在当前的Page_source中
-    Usages：
+    Usages：查看元素是否在当前的Page_source中
+    
     element: 要查找的元素
+    
     :return: True or False
     """
     def is_element_exist(self, element):
         time.sleep(1)  # 在当前页面停留1s后，打印page_source，增加容错性
         source = self.driver.page_source
-        # print(source)
         if element in source:
             return True
         else:
             return False
 
     """ 
-    查找元素
-    Usages：
-    :arg 
+    Usages：查找元素，输入元组 locator，例如 (By.XPATH, "//*[@text='我的']")
+    
+    :arg locator
+    
+    :return 返回查找到的元素
     """
     def find_element(self, locator):
         try:
@@ -112,6 +118,11 @@ class BasePage:
             # self.find_element(locator)
             return self.driver.find_element(*locator)
 
+    """
+    Usages：查找元素并执行点击操作，输入元组 locator，例如 (By.XPATH, "//*[@text='我的']")
+    
+    :arg locator
+    """
     def find_element_and_click(self, locator):
         try:
             self.find_element(locator).click()
@@ -126,8 +137,12 @@ class BasePage:
             self.handle_exception()
             self.find_element(*locator).send_keys(value)
     """
-    找到不元素时，处理可能会出现的异常情况
+    Usages：找到不元素时，处理可能会出现的异常情况
+
     """
+    # 定义一个黑名单，便于找不到元素时，处理异常弹窗上的元素
+    _black_list = [(By.ID, "iv_close")]
+
     def handle_exception(self):
         print(":Exception")
         # 一旦进入异常处理，则查找元素的隐式等待时间设置为0秒
