@@ -175,3 +175,5 @@ class BasePage:
 #                     logger.warn('allure不在环境变量中，无法直接生成html报告！')
 #             except Exception as e:
 #                 logger.warn(e)
+
+# test
