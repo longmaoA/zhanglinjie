@@ -1,6 +1,5 @@
 import allure
 import pytest
-import time
 from Login.LoginPage import LoginPage
 
 """
@@ -14,8 +13,8 @@ allure.attach # 用于向测试报告中输入一些附加的信息，通常是�
 
 @allure.feature('APP登录功能')
 class TestLogin:
-    def setup(self):
-        self.login_page = LoginPage.LoginPage()
+
+    login_page = LoginPage.LoginPage()
 
     @allure.title("测试用例：账号密码登录虎嗅APP")
     @allure.description("用例描述：使用账号密码的登录方式，登录虎嗅APP")
@@ -40,6 +39,8 @@ class TestLogin:
             self.login_page.input_password(password)
         with allure.step("确认登录"):
             self.login_page.click_login()
+        with allure.step("断言是否登录成功！"):
+            self.login_page.assert_login()
 
     @allure.title("测试用例：账号退出虎嗅APP")
     @allure.description("用例描述：进入APP设置，退出虎嗅APP")
@@ -60,5 +61,5 @@ class TestLogin:
             self.login_page.click_confirm()
 
     def teardown(self):
-        time.sleep(2)
-        self.login_page.driver.quit()
+        # self.login_page.driver.quit()
+        pass

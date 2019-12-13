@@ -49,8 +49,8 @@ def start_appium_sever(post_num):
 
 class AppiumDriver:
     driver: WebDriver = None
-    @staticmethod
-    def app_driver(port=4723):
+    @classmethod
+    def app_driver(cls, port=4723):
 
         # 启动 APPIUM Sever
         start_appium_sever(port)
@@ -66,12 +66,6 @@ class AppiumDriver:
             'newCommandTimeout': '66',
             'chromedriverExecutable': '/Users/PycharmProjects/System/Mobile/Mini/chromedriver_240',
             'neReset': True,
-            # 'fullReset': False,
-            # 'unicodeKeyboard': True,
-            # 'resetKeyboard': True,
-            # 'chromeOptions': {
-            #     'androidProcess': 'com.tencent.mm:appbrand0'
-            #           }
         }
         driver = webdriver.Remote("http://localhost:" + str(port) + "/wd/hub", caps)
         driver.implicitly_wait(10)  # 智能等待 10 秒
