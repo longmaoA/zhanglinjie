@@ -47,9 +47,8 @@ class LoginPage(BasePage.BasePage):
         return self
 
     def click_sign_out(self):
-        self.driver.find_element_by_android_uiautomator(
-            'new UiScrollable(new UiSelector().scrollable(true).instance(0)).scrollIntoView(new UiSelector().text("退出账号").instance(0));'
-        ).click()  # 自动滑动页面寻找需要点击的元素，先向上滑动寻找，然后在向下滑动寻找
+        # 自动滑动页面寻找需要点击的元素，先向上滑动寻找，然后在向下滑动寻找
+        self.swipe_and_click("退出账号")
         return self
 
     def click_confirm(self):

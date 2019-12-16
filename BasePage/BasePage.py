@@ -87,6 +87,15 @@ class BasePage:
 
         # 处理完成之后再把隐式时间改回到10s
         self.driver.implicitly_wait(10)
+    """
+    Usages：在可滑动的控件内，自动滑动页面寻找需要点击的元素，先向上滑动寻找，然后在向下滑动寻找
+    :arg element_text，例如 swipe_and_click("退出账号")
+    """
+    def swipe_and_click(self, element_text):
+        self.driver.find_element_by_android_uiautomator(
+            'new UiScrollable(new UiSelector().scrollable(true).instance(0)).scrollIntoView(new UiSelector().text("'+element_text+'").instance(0));'
+        ).click()
+
 
 # class AllureMethods:
 #     def __init__(self):

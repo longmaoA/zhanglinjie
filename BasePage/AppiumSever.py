@@ -35,7 +35,7 @@ class AppiumSever:
         # 根据系统，启动对应的服务
         cmd_dict = {
             'Windows': f' start /b appium -a 127.0.0.1 -p {post_num} --session-override --no-reset --local-timezone',
-            'MAC': f'appium -a 127.0.0.1 -p {post_num} --session-override --no-reset --local-timezone &'
+            'Darwin': f'appium -a 127.0.0.1 -p {post_num} --session-override --no-reset --local-timezone &'
         }
         os.system(cmd_dict[self._system_name])
         time.sleep(3)  # 等待启动完成
