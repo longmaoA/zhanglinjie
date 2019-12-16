@@ -3,7 +3,7 @@
 
 > 依托APPIUM和PYTHON，基于PageObject模式，进行底层方法的封装。
 
-目录结构为：
+**目录结构为：**
 
 > |-- BasePage　　　　　　　　　　　　　　# BasePage目录，里面包含AppiumDriver、AppiumSever、BasePage，等底层的封装  
 > |....| AppiumDriver.py  
