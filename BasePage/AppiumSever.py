@@ -40,4 +40,3 @@ class AppiumSever:
         os.system(cmd_dict[self._system_name])
         time.sleep(3)  # 等待启动完成
         print('\n Appium sever 启动成功!\n')
-
