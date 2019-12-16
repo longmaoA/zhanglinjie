@@ -89,6 +89,7 @@ class BasePage:
         self.driver.implicitly_wait(10)
     """
     Usages：在可滑动的控件内，自动滑动页面寻找需要点击的元素，先向上滑动寻找，然后在向下滑动寻找
+    
     :arg element_text，例如 swipe_and_click("退出账号")
     """
     def swipe_and_click(self, element_text):
@@ -96,6 +97,13 @@ class BasePage:
             'new UiScrollable(new UiSelector().scrollable(true).instance(0)).scrollIntoView(new UiSelector().text("'+element_text+'").instance(0));'
         ).click()
 
+    def get_app_width(self):
+        width = self.driver.get_window_size()["width"]
+        return width
+
+    def get_app_height(self):
+        height = self.driver.get_window_size()["height"]
+        return height
 
 # class AllureMethods:
 #     def __init__(self):

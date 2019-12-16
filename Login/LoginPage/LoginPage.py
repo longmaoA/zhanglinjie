@@ -54,3 +54,6 @@ class LoginPage(BasePage.BasePage):
     def click_confirm(self):
         self.find_element_and_click(self._click_confirm)
         return self
+
+    def print_width(self):
+        print(self.get_app_width())
