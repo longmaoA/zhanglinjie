@@ -1,4 +1,3 @@
-
 from appium import webdriver
 from BasePage.AppiumSever import AppiumSever
 from selenium.webdriver.remote.webdriver import WebDriver
