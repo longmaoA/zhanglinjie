@@ -18,7 +18,7 @@ class AppiumSever:
                 p1 = int(p0.split('LISTENING')[1].strip()[0:4])  # 获取进程号
                 os.popen(f'taskkill /F /PID {p1}')  # 结束进程
                 print('\nAppium server 已结束\n')
-        elif self._system_name == 'MAC':
+        elif self._system_name == 'Darwin':
             p = os.popen(f'lsof -i tcp:{post_num}')
             p0 = p.read()
             if p0.strip() != '':
