@@ -1,6 +1,3 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
 from appium import webdriver
 from BasePage.AppiumSever import AppiumSever
 from selenium.webdriver.remote.webdriver import WebDriver

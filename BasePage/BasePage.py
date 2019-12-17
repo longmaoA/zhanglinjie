@@ -1,6 +1,3 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
 import time
 from BasePage import AppiumDriver
 from selenium.webdriver.common.by import By
@@ -12,16 +9,14 @@ class BasePage:
     def __init__(self):
         self.driver = AppiumDriver.AppiumDriver().app_driver()
 
+    """
+    Usages：查看元素是否在当前的Page_source中
+    
+    element: 要查找的元素
+    
+    :return: True or False
+    """
     def is_element_exist(self, element):
-        """
-        查看元素是否在当前的Page_source中
-
-        element: 要查找的元素
-
-        :return: True or False
-
-        Usages：is_element_exist(element)
-        """
         time.sleep(1)  # 在当前页面停留1s后，打印page_source，增加容错性
         source = self.driver.page_source
         if element in source:
@@ -29,16 +24,14 @@ class BasePage:
         else:
             return False
 
+    """ 
+    Usages：查找元素，输入元组 locator，例如 (By.XPATH, "//*[@text='我的']")
+    
+    :arg locator
+    
+    :return 返回查找到的元素
+    """
     def find_element(self, locator):
-        """
-        在当前页面找元素，如果找到，返回此元素
-
-        :arg locator
-
-        :return 返回查找到的元素
-
-        Usages：查找元素，输入元组 locator，例如 (By.XPATH, "//*[@text='我的']")
-        """
         try:
             return self.driver.find_element(*locator)
         except NoSuchElementException:
@@ -47,14 +40,12 @@ class BasePage:
             # self.find_element(locator)
             return self.driver.find_element(*locator)
 
+    """
+    Usages：查找元素并执行点击操作，输入元组 locator，例如 (By.XPATH, "//*[@text='我的']")
+    
+    :arg locator
+    """
     def find_element_and_click(self, locator):
-        """
-        在当前页面找元素，并点击
-
-        :arg locator
-
-        Usages：查找元素并执行点击操作，输入元组 locator，例如 (By.XPATH, "//*[@text='我的']")
-        """
         try:
             self.find_element(locator).click()
         except NoSuchElementException:
@@ -62,31 +53,19 @@ class BasePage:
             self.find_element(locator).click()
 
     def find_element_and_input(self, locator, value):
-        """
-        在当前页面找元素，并点击
-
-        :Arg
-        - locator 定位元素的元祖
-        - value   要输入的字符串、数字
-
-        Usages：查找元素并执行点击操作，输入元组 locator，输入数据 value
-        例如 find_element_and_input((By.XPATH, "//*[@text='我的']"), 1521023)
-        """
         try:
             self.find_element(locator).send_keys(value)
         except NoSuchElementException:
             self.handle_exception()
             self.find_element(*locator).send_keys(value)
+    """
+    Usages：找到不元素时，处理可能会出现的异常情况
 
+    """
     # 定义一个黑名单，便于找不到元素时，处理异常弹窗上的元素
     _black_list = [(By.ID, "iv_close")]
 
     def handle_exception(self):
-        """
-        找到不元素时，处理可能会出现的异常情况
-
-        Usages：handle_exception()
-        """
         print(":Exception")
         # 一旦进入异常处理，则查找元素的隐式等待时间设置为0秒
         self.driver.implicitly_wait(0)
@@ -125,150 +104,6 @@ class BasePage:
     def get_app_height(self):
         height = self.driver.get_window_size()["height"]
         return height
-
-    def swipe_up(self, t=500, n=1):
-        """
-        向上滑动屏幕
-
-        :Args
-        - t 滑动持续时间，单位毫秒，默认持续时间500毫秒
-        - n 循环滑动几次，默认滑动次数为1
-
-        :Usages
-        swipe_up(500,3)
-        """
-        width_and_height = self.driver.get_window_size()
-        x1 = width_and_height['width'] * 0.5  # x坐标
-        y1 = width_and_height['height'] * 0.75  # 起始y坐标
-        y2 = width_and_height['height'] * 0.25  # 终点y坐标
-        for i in range(n):
-            self.driver.swipe(x1, y1, x1, y2, t)
-
-    def swipe_down(self, t=500, n=1):
-        """
-        向下滑动屏幕
-
-        :Args
-        - t 滑动持续时间，单位毫秒，默认持续时间500毫秒
-        - n 循环滑动几次，默认滑动次数为1
-
-        :Usages
-        swipe_down(500,3)
-        """
-        width_and_height = self.driver.get_window_size()
-        x1 = width_and_height['width'] * 0.5  # x坐标
-        y1 = width_and_height['height'] * 0.25  # 起始y坐标
-        y2 = width_and_height['height'] * 0.75  # 终点y坐标
-        for i in range(n):
-            self.driver.swipe(x1, y1, x1, y2, t)
-
-    def swipe_left(self, t=500, n=1):
-        """
-        向左滑动屏幕
-
-        :Args
-        - t 滑动持续时间，单位毫秒，默认持续时间500毫秒
-        - n 循环滑动几次，默认滑动次数为1
-
-        :Usages
-        swipe_left(500,3)
-        """
-        width_and_height = self.driver.get_window_size()
-        x1 = width_and_height['width'] * 0.75
-        y1 = width_and_height['height'] * 0.5
-        x2 = width_and_height['width'] * 0.25
-        for i in range(n):
-            self.driver.swipe(x1, y1, x2, y1, t)
-
-    def swipe_right(self, t=500, n=1):
-        """
-        向右滑动屏幕
-
-        :Args
-        - t 滑动持续时间，单位毫秒，默认持续时间500毫秒
-        - n 循环滑动几次，默认滑动次数为1
-
-        :Usages
-        swipe_right(500,3)
-        """
-        width_and_height = self.driver.get_window_size()
-        x1 = width_and_height['width'] * 0.25
-        y1 = width_and_height['height'] * 0.5
-        x2 = width_and_height['width'] * 0.75
-        for i in range(n):
-            self.driver.swipe(x1, y1, x2, y1, t)
-
-    def smart_find_and_click(self, locator, circle_num=5):
-        """
-        先向下查找元素，如果发现元素则点击，如果没有发元素，则向上回到初始地点后，继续查找
-
-        :Args
-        - locator 要定位的元素，以及定位方法
-        - circle_num 循环上下查找几次，默认是5次
-
-        :Usages
-        smart_find_and_click((By.XPATH, "//*[@text='退出账号']"), 5)
-        """
-        i = 0
-        if i < circle_num:
-            while i < circle_num:
-                try:
-                    # 尝试点击元素
-                    self.find_element(locator).click()
-                    break
-                except NoSuchElementException:
-                    # 滑动屏幕
-                    self.swipe_up(1500, 1)
-                    i += 1
-
-        if i == circle_num:
-            # i归零
-            i = 0
-            while i < circle_num * 2:
-                try:
-                    # 尝试点击元素
-                    self.find_element(locator).click()
-                    break
-                except NoSuchElementException:
-                    # 滑动屏幕
-                    self.swipe_down(1500, 1)
-                    i += 1
-
-    def smart_lr_find_click(self, locator, circle_num=5):
-        """
-        先向右查找元素，如果发现元素则点击，如果没有发元素，则向左回到初始地点后，继续查找
-
-        :Args
-        - locator 要定位的元素，以及定位方法
-        - circle_num 循环上下查找几次，默认是5次
-
-        :Usages
-        smart_lr_find_click((By.XPATH, "//*[@text='退出账号']"), 5)
-        """
-        i = 0
-        if i < circle_num:
-            while i < circle_num:
-                try:
-                    # 尝试点击元素
-                    self.find_element(locator).click()
-                    break
-                except NoSuchElementException:
-                    # 滑动屏幕
-                    self.swipe_up(1500, 1)
-                    i += 1
-
-        if i == circle_num:
-            # i归零
-            i = 0
-            while i < circle_num * 2:
-                try:
-                    # 尝试点击元素
-                    self.find_element(locator).click()
-                    break
-                except NoSuchElementException:
-                    # 滑动屏幕
-                    self.swipe_down(1500, 1)
-                    i += 1
 
 # class AllureMethods:
 #     def __init__(self):
