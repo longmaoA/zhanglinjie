@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 import allure
 import pytest
 from Login.LoginPage import LoginPage
